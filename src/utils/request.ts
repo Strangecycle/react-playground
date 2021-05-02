@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { getToken, removeToken } from './auth'
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_ROOT,
@@ -6,13 +7,18 @@ const axiosInstance: AxiosInstance = axios.create({
 })
 
 export interface HttpResponse<T = any> {
-  data: T
-  readonly err_code: number
-  readonly err_msg: string
+  data?: T
+  err_code?: number
+  err_msg?: string
 }
 
 axiosInstance.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
+    const token = getToken()
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
+
     return config
   },
   (error: AxiosError): AxiosError => {
@@ -22,11 +28,21 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse): any => {
-    const { data: httpResponse } = response
+    const { data }: HttpResponse = response
 
-    return httpResponse as HttpResponse
+    if (data.err_code !== 0) {
+      return Promise.reject(data)
+    }
+
+    return data
   },
-  (error: AxiosError): AxiosError => {
-    return error
+  ({ response }: AxiosError): Promise<HttpResponse> => {
+    // ! 登录过期
+    if (response?.data.err_code === 401) {
+
+    }
+    return Promise.reject(response)
   }
 )
+
+export default axiosInstance

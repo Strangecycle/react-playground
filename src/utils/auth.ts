@@ -2,7 +2,7 @@ import Cookies, { CookieAttributes } from 'js-cookie'
 
 const TOKEN_KEY = 'token'
 
-export const setToken = (val: string, option: CookieAttributes) => {
+export const setToken = (val: string, option?: CookieAttributes) => {
   Cookies.set(TOKEN_KEY, val, option)
 }
 

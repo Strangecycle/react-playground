@@ -6,5 +6,5 @@ export interface RootState {
 
 export interface Creator<T = any> {
   type: string
-  payload: T
+  payload?: T
 }

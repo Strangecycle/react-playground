@@ -1,3 +1,4 @@
+import { CLEAR_USER, SET_USER } from '../constants/user'
 import { Creator } from '../types'
 
 export interface UserState {
@@ -13,6 +14,12 @@ export interface UserState {
 
 const user = (state: UserState = {}, action: Creator) => {
   switch (action.type) {
+    case SET_USER: {
+      return action.payload
+    }
+    case CLEAR_USER: {
+      return {}
+    }
     default:
       return state
   }
