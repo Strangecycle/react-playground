@@ -36,7 +36,7 @@ export default function SignIn() {
     }
   }, [state.user])
 
-  // TODO 了解一下 hook 闭包陷阱问题
+  // TODO 了解一下 hooks 闭包陷阱
   useEffect(() => {
     let timer: NodeJS.Timeout | any
     if (isSend && countdown !== 0) {
@@ -127,7 +127,7 @@ export default function SignIn() {
           <div className={`bg-gray-200 w-full h-10 rounded px-3 ${inputBorder}`}>
             <input
               ref={phoneInput}
-              className="bg-transparent h-full text-gray-500 text-sm font-medium"
+              className="bg-transparent w-full h-full text-gray-500 text-sm font-medium"
               type="phone"
               placeholder="Phone number"
               value={signInfo.phone}
@@ -137,7 +137,7 @@ export default function SignIn() {
           <div className="mt-3 w-full flex justify-between items-center">
             <div className="bg-gray-200 w-8/12 h-10 rounded px-3">
               <input
-                className="bg-transparent h-full text-gray-500 text-sm font-medium"
+                className="bg-transparent w-full h-full text-gray-500 text-sm font-medium"
                 type="text"
                 placeholder="Captcha"
                 value={signInfo.captcha}

@@ -1,12 +1,16 @@
 import { Dispatch } from 'redux'
-import { getUserInfo, SignInfo, userLogin } from '../../api/user'
+import { EditParams, editUserInfo, getUserInfo, SignInfo, userLogin } from '../../api/user'
 import { setToken } from '../../utils/auth'
 import { HttpResponse } from '../../utils/request'
-import { CLEAR_USER, SET_USER } from '../constants/user'
+import { CLEAR_USER, EDIT_USER, SET_AVATAR, SET_USER } from '../constants/user'
 import { UserState } from '../reducers/user'
 import { Creator } from '../types'
 
-const setUserCreator = (payload: UserState): Creator => ({ type: SET_USER, payload }) 
+export const setUserCreatorSync = (payload: UserState): Creator => ({ type: SET_USER, payload }) 
+
+export const setAvatarCreatorSync = (payload: string): Creator => ({ type: SET_AVATAR, payload })
+
+export const editUserCreatorSync = (payload: EditParams): Creator => ({ type: EDIT_USER, payload }) 
 
 export const clearUserCreator = (): Creator => ({ type: CLEAR_USER })
 
@@ -16,7 +20,20 @@ export const userLoginCreator = (signInfo: SignInfo) => {
       const { data: token }: HttpResponse = await userLogin(signInfo)
       setToken(token)
       const { data: userInfo }: HttpResponse = await getUserInfo()
-      dispatch(setUserCreator(userInfo))
+      dispatch(setUserCreatorSync(userInfo))
+    } catch (error) {
+      console.error(`error`, error)
+    }
+  }
+}
+
+export const editUserCreator = (id: number, editParams: EditParams) => {
+  return async (dispatch: Dispatch): Promise<void> => {
+    try {
+      const { data: affectedRow }: HttpResponse = await editUserInfo(id, editParams)
+      if (affectedRow !== 0) {
+        dispatch(editUserCreatorSync(editParams))
+      }
     } catch (error) {
       console.error(`error`, error)
     }

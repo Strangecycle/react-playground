@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 import { Popover } from '@headlessui/react'
 import {
   AnnotationIcon,
@@ -54,28 +54,30 @@ export default function Welcome() {
     dispatch(clearUserCreator())
   }
 
-  const ElAvatar = Object.keys(state.user).length ? (
-    state.user.avatar ? (
-      <img
-        className="inline-block h-14 w-14 rounded-full ring-2 ring-white"
-        src={state.user.avatar}
-        alt=""
-      />
-    ) : (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-9 h-9"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fillRule="evenodd"
-          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-          clipRule="evenodd"
+  const ElAvatar = useMemo(() => {
+    return Object.keys(state.user).length ? (
+      state.user.avatar ? (
+        <img
+          className="inline-block h-14 w-14 rounded-full ring-2 ring-white"
+          src={state.user.avatar}
+          alt=""
         />
-      </svg>
-    )
-  ) : null
+      ) : (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-9 h-9"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+            clipRule="evenodd"
+          />
+        </svg>
+      )
+    ) : null
+  }, [state.user])
 
   const ElSignButton = Object.keys(state.user).length ? (
     <span

@@ -14,6 +14,13 @@ export interface UserInfoParams {
   email?: string
 }
 
+export interface EditParams {
+  username?: string
+  email?: string
+  phone?: string
+  sentence?: string
+}
+
 const PREFIX = '/user'
 
 export const sendCaptcha = (params: CaptchaParam) => {
@@ -37,5 +44,13 @@ export const getUserInfo = (params?: UserInfoParams) => {
     url: `${PREFIX}/info`,
     method: 'GET',
     params,
+  })
+}
+
+export const editUserInfo = (id: number, data?: EditParams) => {
+  return request({
+    url: `${PREFIX}/${id}`,
+    method: 'PUT',
+    data,
   })
 }
