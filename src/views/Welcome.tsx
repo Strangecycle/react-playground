@@ -9,8 +9,9 @@ import {
 import { useHistory } from 'react-router'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/types'
-import { clearUserCreator } from '../store/actions/user'
+import { clearUserCreator, userSignOutCreator } from '../store/actions/user'
 import { removeToken } from '../utils/auth'
+import { message } from 'antd'
 
 const features = [
   {
@@ -49,9 +50,9 @@ export default function Welcome() {
   )
   const dispatch = useDispatch()
 
-  const handleSignOut = () => {
-    removeToken()
-    dispatch(clearUserCreator())
+  const handleSignOut = async () => {
+    await dispatch(userSignOutCreator())
+    await message.success('Logout')
   }
 
   const ElAvatar = useMemo(() => {

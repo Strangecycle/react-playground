@@ -1,4 +1,6 @@
+import { message } from 'antd'
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { removeStorageItem } from '.'
 import { getToken, removeToken } from './auth'
 
 const axiosInstance: AxiosInstance = axios.create({
@@ -39,7 +41,9 @@ axiosInstance.interceptors.response.use(
   ({ response }: AxiosError): Promise<HttpResponse> => {
     // ! 登录过期
     if (response?.data.err_code === 401) {
-
+      removeToken()
+      removeStorageItem('user')
+      window.location.reload()
     }
     return Promise.reject(response)
   }

@@ -5,28 +5,23 @@ import { ChangeEvent, ChangeEventHandler, useCallback, useEffect, useMemo, useSt
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { EditParams } from '../api/user'
 import { editUserCreator, setAvatarCreatorSync } from '../store/actions/user'
+import { UserState } from '../store/reducers/user'
 import { RootState } from '../store/types'
+import { getStorageItem, setStorageItem } from '../utils'
 import { getToken } from '../utils/auth'
 
 export default function Profile() {
-  const dispatch = useDispatch()
   const state = useSelector(
     (state: RootState) => ({ user: state.user }),
     shallowEqual
   )
   const [editParams, setEditParams] = useState<EditParams>({
     username: state.user.username,
-    email: state.user.email,
     phone: state.user.phone,
+    email: state.user.email,
     sentence: state.user.sentence,
   })
-
-  // TODO 更新完信息后提示成功
-  /* useEffect(() => {
-    if (Object.keys(state.user).length) {
-      message.success('Success save')
-    }
-  }, [state.user]) */
+  const dispatch = useDispatch()
 
   // 每次修改表单时，都会触发重新渲染，这里使用 useMemo 进行优化，缓存计算结果
   const ElAvatar = useMemo(() => {
@@ -57,6 +52,9 @@ export default function Profile() {
       return
     }
     const { avatarUrl } = response.data
+    const userInfo: UserState = getStorageItem('user')
+    userInfo.avatar = avatarUrl
+    setStorageItem('user', userInfo)
     dispatch(setAvatarCreatorSync(avatarUrl))
   }
 
@@ -64,8 +62,9 @@ export default function Profile() {
     setEditParams({ ...editParams, [e.target.name]: e.target.value })
   }
 
-  const handleSave = () => {
-    dispatch(editUserCreator((state.user.id as number), editParams))
+  const handleSave = async () => {
+    await dispatch(editUserCreator((state.user.id as number), editParams))
+    await message.success('Success!')
   }
 
   return (
@@ -100,7 +99,7 @@ export default function Profile() {
                 name="username"
                 className="bg-transparent w-full h-full text-gray-500 text-sm font-medium"
                 type="phone"
-                value={editParams.username}
+                value={editParams.username || ''}
                 placeholder="Username"
                 onChange={handleChange}
               />
@@ -113,7 +112,7 @@ export default function Profile() {
                 name="phone"
                 className="bg-transparent w-full h-full text-gray-500 text-sm font-medium"
                 type="phone"
-                value={editParams.phone}
+                value={editParams.phone || ''}
                 placeholder="Phone"
                 disabled
                 onChange={handleChange}
@@ -127,7 +126,7 @@ export default function Profile() {
                 name="email"
                 className="bg-transparent w-full h-full text-gray-500 text-sm font-medium"
                 type="phone"
-                value={editParams.email}
+                value={editParams.email || ''}
                 placeholder="Email"
                 onChange={handleChange}
               />
@@ -139,7 +138,7 @@ export default function Profile() {
               <textarea
                 name="sentence"
                 className="bg-transparent w-full h-full text-gray-500 text-sm font-medium"
-                value={editParams.sentence}
+                value={editParams.sentence || ''}
                 placeholder="Sentence"
                 onChange={handleChange}
               />

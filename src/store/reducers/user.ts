@@ -1,3 +1,4 @@
+import { getStorageItem } from '../../utils'
 import { CLEAR_USER, EDIT_USER, SET_AVATAR, SET_USER } from '../constants/user'
 import { Creator } from '../types'
 
@@ -12,7 +13,12 @@ export interface UserState {
   updatedAt?: string
 }
 
-const user = (state: UserState = {}, action: Creator) => {
+const userState = (): UserState => {
+  const userInfo = getStorageItem('user')
+  return userInfo || {}
+}
+
+const user = (state: UserState = userState(), action: Creator) => {
   switch (action.type) {
     case SET_USER: {
       return action.payload

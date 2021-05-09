@@ -1,9 +1,9 @@
+import { message } from 'antd'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
+import { useHistory, useRouteMatch } from 'react-router'
 import { sendCaptcha, SignInfo } from '../api/user'
-import { userLoginCreator } from '../store/actions/user'
-import { RootState } from '../store/types'
+import { userLoginCreator, userSignOutCreator } from '../store/actions/user'
 import { CAPTCHA_REG, PHONE_REG } from '../utils/reg'
 import { HttpResponse } from '../utils/request'
 
@@ -22,19 +22,7 @@ export default function SignIn() {
   const [signInfo, setSignInfo] = useState<SignInfo>({ phone: '', captcha: '' })
   const phoneInput = useRef<HTMLInputElement | any>(null)
   const dispatch = useDispatch()
-  const state = useSelector(
-    (state: RootState) => ({
-      user: state.user,
-    }),
-    shallowEqual
-  )
   const history = useHistory()
-
-  useEffect(() => {
-    if (Object.keys(state.user).length) {
-      history.goBack()
-    }
-  }, [state.user])
 
   // TODO 了解一下 hooks 闭包陷阱
   useEffect(() => {
@@ -108,7 +96,9 @@ export default function SignIn() {
     if (isSignInDisabled) {
       return
     }
-    dispatch(userLoginCreator(signInfo))
+    await dispatch(userLoginCreator(signInfo))
+    await history.replace('/')
+    await message.success('Login')
   }
 
   return (
