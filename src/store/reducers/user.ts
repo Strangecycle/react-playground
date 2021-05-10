@@ -13,11 +13,6 @@ export interface UserState {
   updatedAt?: string
 }
 
-const userState = (): UserState => {
-  const userInfo = getStorageItem('user')
-  return userInfo || {}
-}
-
 const user = (state: UserState = userState(), action: Creator) => {
   switch (action.type) {
     case SET_USER: {
@@ -33,7 +28,7 @@ const user = (state: UserState = userState(), action: Creator) => {
       return {}
     }
     default:
-      return state
+      return getStorageItem('user') || state
   }
 }
 
