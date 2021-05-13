@@ -1,17 +1,16 @@
-import { Fragment, useMemo } from 'react'
-import { Popover } from '@headlessui/react'
+import { Fragment, useMemo } from 'react';
+import { Popover } from '@headlessui/react';
 import {
   AnnotationIcon,
   GlobeAltIcon,
   LightningBoltIcon,
   ScaleIcon,
-} from '@heroicons/react/outline'
-import { useHistory } from 'react-router'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../store/types'
-import { clearUserCreator, userSignOutCreator } from '../store/actions/user'
-import { removeToken } from '../utils/auth'
-import { message } from 'antd'
+} from '@heroicons/react/outline';
+import { useHistory } from 'react-router';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/types';
+import { userSignOutCreator } from '../store/actions/user';
+import { message } from 'antd';
 
 const features = [
   {
@@ -38,22 +37,22 @@ const features = [
       'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
     icon: AnnotationIcon,
   },
-]
+];
 
 export default function Welcome() {
-  const history = useHistory()
+  const history = useHistory();
   const state = useSelector(
     (state: RootState) => ({
       user: state.user,
     }),
     shallowEqual
-  )
-  const dispatch = useDispatch()
+  );
+  const dispatch = useDispatch();
 
   const handleSignOut = async () => {
-    await dispatch(userSignOutCreator())
-    await message.success('Logout')
-  }
+    await dispatch(userSignOutCreator());
+    await message.success('Logout');
+  };
 
   const ElAvatar = useMemo(() => {
     return Object.keys(state.user).length ? (
@@ -77,8 +76,8 @@ export default function Welcome() {
           />
         </svg>
       )
-    ) : null
-  }, [state.user])
+    ) : null;
+  }, [state.user]);
 
   const ElSignButton = Object.keys(state.user).length ? (
     <span
@@ -94,7 +93,7 @@ export default function Welcome() {
     >
       Sign In
     </span>
-  )
+  );
 
   return (
     <Fragment>
@@ -121,7 +120,10 @@ export default function Welcome() {
                     >
                       <div className="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
                         <div className="flex items-center justify-between w-full md:w-auto">
-                          <span className="cursor-pointer" onClick={() => history.push('/profile')}>
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => history.push('/profile')}
+                          >
                             <span className="sr-only">Workflow</span>
                             {ElAvatar}
                           </span>
@@ -198,5 +200,5 @@ export default function Welcome() {
         </div>
       </div>
     </Fragment>
-  )
+  );
 }

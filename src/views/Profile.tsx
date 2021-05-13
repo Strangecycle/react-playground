@@ -1,27 +1,27 @@
-import { Button, message, Upload } from 'antd'
-import ImgCrop from 'antd-img-crop'
-import { UploadChangeParam, UploadFile } from 'antd/lib/upload/interface'
-import { ChangeEvent, ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { EditParams } from '../api/user'
-import { editUserCreator, setAvatarCreatorSync } from '../store/actions/user'
-import { UserState } from '../store/reducers/user'
-import { RootState } from '../store/types'
-import { getStorageItem, setStorageItem } from '../utils'
-import { getToken } from '../utils/auth'
+import { message, Upload } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import { UploadChangeParam } from 'antd/lib/upload/interface';
+import { useMemo, useState } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { EditParams } from '../api/user';
+import { editUserCreator, setAvatarCreatorSync } from '../store/actions/user';
+import { UserState } from '../store/reducers/user';
+import { RootState } from '../store/types';
+import { getStorageItem, setStorageItem } from '../utils';
+import { getToken } from '../utils/auth';
 
 export default function Profile() {
   const state = useSelector(
     (state: RootState) => ({ user: state.user }),
     shallowEqual
-  )
+  );
   const [editParams, setEditParams] = useState<EditParams>({
     username: state.user.username,
     phone: state.user.phone,
     email: state.user.email,
     sentence: state.user.sentence,
-  })
-  const dispatch = useDispatch()
+  });
+  const dispatch = useDispatch();
 
   // 每次修改表单时，都会触发重新渲染，这里使用 useMemo 进行优化，缓存计算结果
   const ElAvatar = useMemo(() => {
@@ -44,28 +44,28 @@ export default function Profile() {
           clipRule="evenodd"
         />
       </svg>
-    )
-  }, [state.user.avatar])
+    );
+  }, [state.user.avatar]);
 
   const handleAvatarChange = ({ file: { response } }: UploadChangeParam) => {
     if (!response) {
-      return
+      return;
     }
-    const { avatarUrl } = response.data
-    const userInfo: UserState = getStorageItem('user')
-    userInfo.avatar = avatarUrl
-    setStorageItem('user', userInfo)
-    dispatch(setAvatarCreatorSync(avatarUrl))
-  }
+    const { avatarUrl } = response.data;
+    const userInfo: UserState = getStorageItem('user');
+    userInfo.avatar = avatarUrl;
+    setStorageItem('user', userInfo);
+    dispatch(setAvatarCreatorSync(avatarUrl));
+  };
 
   const handleChange = (e: any) => {
-    setEditParams({ ...editParams, [e.target.name]: e.target.value })
-  }
+    setEditParams({ ...editParams, [e.target.name]: e.target.value });
+  };
 
   const handleSave = async () => {
-    await dispatch(editUserCreator((state.user.id as number), editParams))
-    await message.success('Success!')
-  }
+    await dispatch(editUserCreator(state.user.id as number, editParams));
+    await message.success('Success!');
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -145,10 +145,13 @@ export default function Profile() {
             </div>
           </div>
         </div>
-        <span className="mt-6 flex items-center justify-center px-8 py-3 border border-transparent text-sm font-medium rounded-3xl text-white md:py-2 md:text-lg md:px-6 bg-blue-400 hover:bg-blue-500 cursor-pointer" onClick={handleSave}>
+        <span
+          className="mt-6 flex items-center justify-center px-8 py-3 border border-transparent text-sm font-medium rounded-3xl text-white md:py-2 md:text-lg md:px-6 bg-blue-400 hover:bg-blue-500 cursor-pointer"
+          onClick={handleSave}
+        >
           Save
         </span>
       </div>
     </div>
-  )
+  );
 }

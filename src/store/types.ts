@@ -1,10 +1,10 @@
-import { UserState } from './reducers/user'
+import { UserState } from './reducers/user';
 
 export interface RootState {
-  user: UserState
+  user: UserState;
 }
 
 export interface Creator<T = any> {
-  type: string
-  payload?: T
+  type: string;
+  payload?: T;
 }
