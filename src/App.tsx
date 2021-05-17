@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route, RouteProps, Switch } from 'react-router';
 import { getStorageItem } from './utils';
+import { getToken } from './utils/auth';
 import Profile from './views/Profile';
 import SignIn from './views/SignIn';
 import Welcome from './views/Welcome';
@@ -41,7 +42,7 @@ function App() {
         render={(props) => {
           const userInfo = getStorageItem('user');
 
-          if (route.meta?.auth && !userInfo) {
+          if (route.meta?.auth && (!userInfo || !getToken())) {
             return (
               <Redirect
                 to={{ pathname: '/sign-in', state: { from: props.location } }}

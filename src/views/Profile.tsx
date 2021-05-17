@@ -79,7 +79,7 @@ export default function Profile() {
               name="file"
               className="rounded-full"
               maxCount={1}
-              action="http://localhost:5000/user/avatar"
+              action={`${process.env.REACT_APP_API_ROOT}/user/avatar`}
               headers={{
                 Authorization: `Bearer ${getToken()}`,
               }}

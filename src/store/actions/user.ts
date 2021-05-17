@@ -6,7 +6,7 @@ import {
   SignInfo,
   userLogin,
 } from '../../api/user';
-import { removeStorageItem, setStorageItem } from '../../utils';
+import { getStorageItem, removeStorageItem, setStorageItem } from '../../utils';
 import { removeToken, setToken } from '../../utils/auth';
 import { HttpResponse } from '../../utils/request';
 import { CLEAR_USER, EDIT_USER, SET_AVATAR, SET_USER } from '../constants/user';
@@ -52,9 +52,11 @@ export const editUserCreator = (id: number, editParams: EditParams) => {
         editParams
       );
       if (affectedRow !== 0) {
+        const userInfo = getStorageItem('user');
+        Object.assign(userInfo, editParams);
+        setStorageItem('user', userInfo);
         dispatch(editUserCreatorSync(editParams));
       }
-      return Promise.resolve();
     } catch (error) {
       console.error(`error`, error);
     }

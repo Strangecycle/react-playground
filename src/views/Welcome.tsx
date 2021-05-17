@@ -60,7 +60,7 @@ export default function Welcome() {
         <img
           className="inline-block h-14 w-14 rounded-full ring-2 ring-white"
           src={state.user.avatar}
-          alt=""
+          alt="avatar"
         />
       ) : (
         <svg
